@@ -19,7 +19,7 @@ public class Knight extends Piece{
     }
 
     @Override
-    public Collection<Move> calculateLegalMoves(Board board) {
+    public Collection<Move> calculateLegalMoves(final Board board) {
 
         final List<Move> legalMoves = new ArrayList<>();
 
@@ -30,21 +30,21 @@ public class Knight extends Piece{
             if(BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)){
 
                 if(isFirstColumnExclusion(this.piecePosition,currentCandidateOffset) ||
-                    isEightdColumnExclusion(this.piecePosition,currentCandidateOffset) ||
+                    isSecondColumnExclusion(this.piecePosition,currentCandidateOffset) ||
                     isSeventhColumnExclusion(this.piecePosition,currentCandidateOffset) ||
-                    isEightdColumnExclusion(this.piecePosition,currentCandidateOffset)){
+                    isEightColumnExclusion(this.piecePosition,currentCandidateOffset)){
                     continue;
                 }
 
                 final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
                 if(!candidateDestinationTile.isTileOccupied()){
-                    legalMoves.add(new Move());
+                    legalMoves.add(new Move.MajorMove(board, this, candidateDestinationCoordinate));
                 } else {
                     final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                     final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
 
                     if(this.pieceAlliance != pieceAlliance){
-                        legalMoves.add(new Move());
+                        legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                     }
                 }
             }
@@ -66,7 +66,7 @@ public class Knight extends Piece{
         return BoardUtils.SEVENTH_COLUMN[currentPosition] && (candidateOffset == -6 || candidateOffset == 10);
     }
 
-    private static boolean isEightdColumnExclusion(final int currentPosition, final int candidateOffset){
+    private static boolean isEightColumnExclusion(final int currentPosition, final int candidateOffset){
         return BoardUtils.EIGHT_COLUMN[currentPosition] && (candidateOffset == -15 || candidateOffset == -6 || candidateOffset == 10 || candidateOffset == 17);
     }
 
