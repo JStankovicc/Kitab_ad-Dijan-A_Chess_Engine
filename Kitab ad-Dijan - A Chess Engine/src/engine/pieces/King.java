@@ -15,10 +15,14 @@ public class King extends Piece{
 
     private final static int[] CANDIDATE_MOVE_COORDINATE = { -9, -8, -7, -1, 1, 7, 8, 9 };
 
-    King(int piecePosition, Alliance pieceAlliance) {
+    public King(int piecePosition, Alliance pieceAlliance) {
         super(piecePosition, pieceAlliance);
     }
 
+    @Override
+    public String toString(){
+        return  PieceType.KING.toString();
+    }
     @Override
     public Collection<Move> calculateLegalMoves(Board board) {
 
