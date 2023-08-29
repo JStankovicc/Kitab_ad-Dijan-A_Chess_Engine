@@ -2,6 +2,9 @@ package engine.board;
 
 import engine.Alliance;
 import engine.pieces.*;
+import engine.player.BlackPlayer;
+import engine.player.Player;
+import engine.player.WhitePlayer;
 
 import java.util.*;
 
@@ -11,6 +14,10 @@ public class Board {
     private final Collection<Piece> whitePieces;
     private final Collection<Piece> blackPieces;
 
+    private final WhitePlayer whitePlayer;
+    private final BlackPlayer blackPlayer;
+    private final Player currentPlayer;
+
     private Board(Builder builder){
         this.gameBoard = createGameBoard(builder);
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
@@ -18,6 +25,18 @@ public class Board {
 
         final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
         final Collection<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
+
+        this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
+        this.blackPlayer = new BlackPlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
+        this.currentPlayer = null;
+    }
+
+    public Player whitePlayer(){
+        return this.whitePlayer;
+    }
+
+    public Player blackPlayer(){
+        return this.blackPlayer;
     }
 
     @Override
@@ -31,6 +50,14 @@ public class Board {
             }
         }
         return builder.toString();
+    }
+
+    public Collection<Piece> getBlackPieces(){
+        return this.blackPieces;
+    }
+
+    public Collection<Piece> getWhitePieces(){
+        return this.whitePieces;
     }
 
     private Collection<Move> calculateLegalMoves(final Collection<Piece> pieces) {
@@ -110,6 +137,10 @@ public class Board {
         builder.setMoveMaker(Alliance.WHITE);
 
         return builder.build();
+    }
+
+    public Player currentPlayer() {
+        return this.currentPlayer;
     }
 
     public static class Builder {
