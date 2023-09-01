@@ -63,4 +63,9 @@ public class Pawn extends Piece{
         }
         return Collections.unmodifiableList(legalMoves);
     }
+
+    @Override
+    public Pawn movePiece(final Move move) {
+        return new Pawn(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance());
+    }
 }
